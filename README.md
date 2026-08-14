@@ -10,6 +10,9 @@ and can override keys or inherit a key from another config.
 
 ## Install
 
+Needs [Cargo](https://doc.rust-lang.org/cargo/), installed with
+[rustup](https://rustup.rs/).
+
 ```fish
 cargo install --git https://github.com/stonecharioteer/dottler
 ```
