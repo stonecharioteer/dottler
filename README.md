@@ -10,15 +10,18 @@ and can override keys or inherit a key from another config.
 
 ## Install
 
-Not on crates.io yet. From a checkout:
+Needs [Cargo](https://doc.rust-lang.org/cargo/), installed with
+[rustup](https://rustup.rs/).
+
+```fish
+cargo install --git https://github.com/stonecharioteer/dottler
+```
+
+From a checkout:
 
 ```fish
 cargo binstall --path .
-```
-
-Or compile locally:
-
-```fish
+# or
 cargo install --path .
 ```
 
