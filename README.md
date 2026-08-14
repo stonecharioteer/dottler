@@ -107,8 +107,8 @@ project id.
 
 ## Packages (monorepos)
 
-One git remote is not one env store. `pantheon/ad_launcher` and
-`pantheon/sal` are separate packages.
+One git remote is not one env store. `apps/web` and `apps/api` in the
+same repo are separate packages.
 
 Package, in order:
 
@@ -123,24 +123,24 @@ Package, in order:
 no pin resolves as `(repo)`.
 
 ```fish
-cd pantheon/ad_launcher
+cd apps/web
 dottler which
-# project  github.com-midihealth-pantheon
-# package  ad_launcher
+# project  github.com-acme-platform
+# package  apps/web
 
-cd pantheon
+cd ../..
 dottler which
 # package  (repo)
 
 # pin a nested app that has no package marker
-cd pantheon/mcp-servers/sf-dw-mcp
-dottler init --package mcp-servers/sf-dw-mcp
+cd services/worker
+dottler init --package services/worker
 ```
 
 Repo-level `.dottler.toml` can list packages so path matching is explicit:
 
 ```toml
-packages = ["ad_launcher", "sal", "orchestrator", "mcp-servers/sf-dw-mcp"]
+packages = ["apps/web", "apps/api", "services/worker"]
 ```
 
 ## `.dottler.toml`
@@ -193,9 +193,9 @@ $DOTTLER_HOME/projects/<slug>/     # or ~/.config/dottler/projects/<slug>/
   stg.env
   prd.env
   packages/
-    ad_launcher/
+    apps/web/
       dev.env
-    mcp-servers/sf-dw-mcp/
+    services/worker/
       dev.env
 ```
 
