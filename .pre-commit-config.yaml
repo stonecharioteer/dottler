@@ -1,0 +1,44 @@
+minimum_pre_commit_version: "3.7.0"
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: no-commit-to-branch
+        args: [--branch, main]
+
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt --check
+        entry: cargo fmt --all -- --check
+        language: system
+        pass_filenames: false
+        types: [rust]
+
+      - id: cargo-build
+        name: cargo build
+        entry: cargo build --locked
+        language: system
+        pass_filenames: false
+        types: [rust]
+
+      - id: conventional-commit
+        name: Check conventional commit message
+        entry: >-
+          bash -lc 'msg_file="$1";
+          pattern="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\\([[:alnum:]_.-]+\\))?(!)?: .+";
+          if grep -Eq "$pattern" "$msg_file"; then
+            exit 0;
+          fi;
+          echo "Commit message must use Conventional Commits, e.g. feat: add inherit";
+          exit 1' --
+        language: system
+        stages: [commit-msg]
