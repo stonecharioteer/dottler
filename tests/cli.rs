@@ -419,42 +419,42 @@ fn packages_are_isolated() {
     let tmp = TempDir::new().unwrap();
     let home = tmp.path().join("home");
     let repo = init_repo(tmp.path());
-    let ad = repo.join("ad_launcher");
-    let sal = repo.join("sal");
-    fs::create_dir_all(&ad).unwrap();
-    fs::create_dir_all(&sal).unwrap();
-    fs::write(ad.join("pyproject.toml"), "[project]\nname = \"ad\"\n").unwrap();
-    fs::write(sal.join("pyproject.toml"), "[project]\nname = \"sal\"\n").unwrap();
+    let web = repo.join("apps").join("web");
+    let api = repo.join("apps").join("api");
+    fs::create_dir_all(&web).unwrap();
+    fs::create_dir_all(&api).unwrap();
+    fs::write(web.join("pyproject.toml"), "[project]\nname = \"web\"\n").unwrap();
+    fs::write(api.join("pyproject.toml"), "[project]\nname = \"api\"\n").unwrap();
 
-    let out = run(&home, &ad, &["which"]);
+    let out = run(&home, &web, &["which"]);
     assert_ok(&out);
-    let which_ad = stdout(&out);
-    assert!(which_ad.contains("github.com-acme-widgets"), "{which_ad}");
-    assert!(which_ad.contains("ad_launcher"), "{which_ad}");
+    let which_web = stdout(&out);
+    assert!(which_web.contains("github.com-acme-widgets"), "{which_web}");
+    assert!(which_web.contains("apps/web"), "{which_web}");
 
-    let out = run(&home, &sal, &["which"]);
+    let out = run(&home, &api, &["which"]);
     assert_ok(&out);
-    assert!(stdout(&out).contains("sal"), "{}", stdout(&out));
+    assert!(stdout(&out).contains("apps/api"), "{}", stdout(&out));
 
-    let out = run(&home, &ad, &["set", "APP=ad"]);
+    let out = run(&home, &web, &["set", "APP=web"]);
     assert_ok(&out);
-    let out = run(&home, &sal, &["set", "APP=sal"]);
+    let out = run(&home, &api, &["set", "APP=api"]);
     assert_ok(&out);
 
-    let out = run(&home, &ad, &["get", "APP"]);
+    let out = run(&home, &web, &["get", "APP"]);
     assert_ok(&out);
-    assert_eq!(stdout(&out), "ad\n");
-    let out = run(&home, &sal, &["get", "APP"]);
+    assert_eq!(stdout(&out), "web\n");
+    let out = run(&home, &api, &["get", "APP"]);
     assert_ok(&out);
-    assert_eq!(stdout(&out), "sal\n");
+    assert_eq!(stdout(&out), "api\n");
 
     let out = run(&home, &repo, &["get", "APP"]);
     assert!(!out.status.success());
 
     let out = run(&home, &repo, &["packages"]);
     assert_ok(&out);
-    assert!(stdout(&out).contains("ad_launcher"));
-    assert!(stdout(&out).contains("sal"));
+    assert!(stdout(&out).contains("apps/web"));
+    assert!(stdout(&out).contains("apps/api"));
 }
 
 #[test]
@@ -472,17 +472,17 @@ fn init_package_pin() {
             "widgets",
             "init",
             "--package",
-            "mcp-servers/sf-dw-mcp",
+            "services/worker",
         ],
     );
     assert_ok(&out);
     let cfg = fs::read_to_string(cwd.join(".dottler.toml")).unwrap();
-    assert!(cfg.contains("mcp-servers/sf-dw-mcp"), "{cfg}");
+    assert!(cfg.contains("services/worker"), "{cfg}");
 
     let out = run(&home, &cwd, &["which"]);
     assert_ok(&out);
     assert!(
-        stdout(&out).contains("mcp-servers/sf-dw-mcp"),
+        stdout(&out).contains("services/worker"),
         "{}",
         stdout(&out)
     );

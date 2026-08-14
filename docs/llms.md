@@ -99,23 +99,21 @@ $DOTTLER_HOME/projects/<slug>/
   packages/<package>/<env>.env
 ```
 
-Nested package `mcp-servers/sf-dw-mcp` lives at
-`packages/mcp-servers/sf-dw-mcp/`.
+Nested package `services/worker` lives at `packages/services/worker/`.
 
 `.dottler.toml` is identity only. Safe to commit. Env files are not.
 
 ```toml
 project = "widgets"
-package = "ad_launcher"
-packages = ["ad_launcher", "sal", "mcp-servers/sf-dw-mcp"]
+package = "apps/web"
+packages = ["apps/web", "apps/api", "services/worker"]
 ```
 
 ## Monorepo
 
-`pantheon/ad_launcher` and `pantheon/sal` share project
-`github.com-midihealth-pantheon` and keep separate stores. Repo root
-with no package marker is repo-level. Pin a nested app with
-`dottler init --package mcp-servers/sf-dw-mcp` or list packages in the
+`apps/web` and `apps/api` share the git-remote project and keep separate
+stores. Repo root with no package marker is repo-level. Pin a nested app
+with `dottler init --package services/worker` or list packages in the
 repo `.dottler.toml`.
 
 ## Do not

@@ -345,35 +345,35 @@ mod tests {
         fs::create_dir(&child).unwrap();
         fs::write(
             dir.path().join(".dottler.toml"),
-            "project = \"widgets\"\npackage = \"ad_launcher\"\n",
+            "project = \"widgets\"\npackage = \"apps/web\"\n",
         )
         .unwrap();
         let id = resolve(&child, None, None).unwrap();
         assert_eq!(id.project, ProjectId::Named("widgets".into()));
-        assert_eq!(id.package.as_deref(), Some("ad_launcher"));
+        assert_eq!(id.package.as_deref(), Some("apps/web"));
     }
 
     #[test]
     fn packages_list_longest_prefix() {
         assert_eq!(
             longest_prefix(
-                "mcp-servers/sf-dw-mcp/src",
+                "services/worker/src",
                 &[
-                    "mcp-servers".into(),
-                    "mcp-servers/sf-dw-mcp".into(),
-                    "sal".into()
+                    "services".into(),
+                    "services/worker".into(),
+                    "apps/api".into()
                 ]
             ),
-            Some("mcp-servers/sf-dw-mcp")
+            Some("services/worker")
         );
-        assert_eq!(longest_prefix("docs", &["sal".into()]), None);
+        assert_eq!(longest_prefix("docs", &["apps/api".into()]), None);
     }
 
     #[test]
     fn normalize_nested_package() {
         assert_eq!(
-            normalize_package("mcp-servers/sf-dw-mcp").unwrap(),
-            "mcp-servers/sf-dw-mcp"
+            normalize_package("services/worker").unwrap(),
+            "services/worker"
         );
         assert!(normalize_package("../x").is_err());
         assert!(normalize_package("").is_err());
